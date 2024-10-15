@@ -146,10 +146,8 @@ const Home = () => {
           {images.length > 0 ? (
             images.map((data, key) => (
               <div key={key} className="img-cont">
-                <Image
+                <img
                   src={data.url}
-                  width={50}
-                  height={50}
                   className="image"
                   onClick={handleImageChange}
                   alt={data.id}
