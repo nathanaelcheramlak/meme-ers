@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { LuDownload } from "react-icons/lu";
-import "./home.css";
 
 const Home = () => {
   const [images, setImages] = useState([]); // Stores the available images
@@ -84,37 +83,48 @@ const Home = () => {
     }
   };
 
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.style.display = "none";
+    link.href = generatedMeme;
+    link.download = "generated_meme.jpg"; // TODO name based on the generated meme
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <div>
       <nav>
-        <ul>
+        <ul className="flex p-5 items-center">
           <Image
             src="/OOH_face.jpg"
             height={100}
             width={100}
-            className="head-img"
-            alt="Header Image"
+            className="w-20 rounded-md"
+            alt="Logo"
           />
-          <li className="head-text">Meme Generator</li>
+          <li className="font-extrabold text-white bg-orange-500  text-4xl p-2 rounded-md ml-2">Meme Generator</li>
         </ul>
       </nav>
 
-      <div className="main-container">
+      <div className="flex mx-4 gap-4">
         <div className="editor">
           {currentImage ? (
             <img
               src={currentImage}
               width={200}
               height={200}
-              className="preview-img"
+              className="w-full rounded-md"
               alt="Selected Image"
             />
           ) : (
-            <h3>Select an Image</h3>
+            <h3 className="text-center font-bold">[Select an Image]</h3>
           )}
           <form>
             <label>Text 0:</label>
             <input
+              className="text-form"
               name="text0"
               onChange={handleChange}
               required={true}
@@ -123,32 +133,29 @@ const Home = () => {
             <br />
             <label>Text 1:</label>
             <input
+              className="text-form"
               name="text1"
               onChange={handleChange}
               required={true}
               value={formData.text1}
             />
           </form>
-          <div className="btn-coll">
-            <button onClick={handleGenerate}>
+          <div className="flex gap-4 self-center h-10">
+            <button className="generate-btn" onClick={handleGenerate}>
               {generating ? "Generating..." : "Generate"}
             </button>
-            {generatedMeme && (
-              <a href={generatedMeme} download="generated_meme.jpg">
-                <button id="download-btn">
-                  <LuDownload />
-                </button>
-              </a>
-            )}
+            <button className="download-btn" onClick={handleDownload}>
+              <LuDownload />
+            </button>
           </div>
         </div>
-        <div className="images">
+        <div className="w-[62rem] max-w-[70%] flex p-2 gap-2 flex-wrap">
           {images.length > 0 ? (
             images.map((data, key) => (
-              <div key={key} className="img-cont">
+              <div key={key} className="image">
                 <img
                   src={data.url}
-                  className="image"
+                  className="w-48 h-48"
                   onClick={handleImageChange}
                   alt={data.id}
                 />

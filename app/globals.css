@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.editor {
+    @apply w-96 max-w-[30%] max-h-fit flex flex-col justify-center gap-4 bg-[lightblue] px-4 py-8 rounded-lg border-2 border-solid border-[black];
+}
+
+.text-form {
+    @apply w-[70%] px-2 h-8 m-2 rounded-sm border-2 border-solid border-gray-600 focus:border-orange-600 focus:outline-none;
+}
+
+.generate-btn {
+    @apply font-bold bg-[orangered] w-fit text-[white] self-center border px-8 py-2 rounded-xl transition-[0.25s] duration-[ease] border-solid border-yellow-500 hover:bg-yellow-600 hover:border-white ;
+}
+
+.download-btn {
+    @apply bg-[orangered] w-fit text-[white] h-full aspect-[1] border  flex justify-center items-center transition-[0.25s] duration-[ease] p-2 rounded-md hover:bg-yellow-600 hover:border-white;
+}
+
+.image {
+    @apply flex justify-center items-center cursor-pointer transition-[0.3s] duration-[ease] rounded-lg border-2 border-solid border-[black] hover:scale-105;
+}
