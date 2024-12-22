@@ -7,7 +7,7 @@
 }
 
 .text-form {
-    @apply w-[70%] px-2 h-8 m-2 rounded-sm border-2 border-solid border-gray-600 focus:border-orange-600 focus:outline-none;
+    @apply w-[70%] px-2 h-8 m-2 rounded-sm border-2 border-solid border-gray-600 focus:border-orange-400 focus:outline-none;
 }
 
 .generate-btn {
