@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    @apply transition-[0.5s] duration-[ease];
+}
+
 .editor {
     @apply w-96 max-w-[30%] max-h-fit flex flex-col justify-center gap-4 bg-[lightblue] px-4 py-8 rounded-lg border-2 border-solid border-[black];
 }

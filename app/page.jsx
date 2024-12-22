@@ -1,14 +1,16 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { LuDownload } from "react-icons/lu";
+import { LuDownload, LuDelete, LuPlus } from "react-icons/lu";
+import TextInput from "./TextInput";
 
 const Home = () => {
+  const [formDatas, setFormDatas] = useState([{id: 1, text: ""}]); // Store the form data
+
   const [images, setImages] = useState([]); // Stores the available images
-  const [formData, setFormData] = useState({ text0: "", text1: "" }); // Store the form data
-  const [currentImage, setCurrentImage] = useState(""); // Store the current preview image url
-  const [currentImageID, setCurrentImageID] = useState(""); // Store the current preview image ID
+  const [selectedImage, setselectedImage] = useState({}); // Store the current preview image url
   const [generatedMeme, setGeneratedMeme] = useState(""); // Store the generated meme URL
+
   const [generating, setGenerating] = useState(false); // Store the generating state
 
   useEffect(() => {
@@ -27,28 +29,33 @@ const Home = () => {
     fetchImages();
   }, []);
 
-  const handleImageChange = (e) => {
-    setCurrentImage(e.target.src);
-    setCurrentImageID(e.target.alt);
+  const handleImageChange = (e, data) => {
+    setselectedImage(data);
+    console.log(data);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleChange = (e, id) => {
+    const val = e.target.value;
+    setFormDatas((prev) => 
+      prev.map((data) =>
+        data.id === id ? {...data, text: val} : data)
+    );
   };
+
+  const addTextField = () => {
+    const id = formDatas.length + 1;
+    setFormDatas([...formDatas, {id, text: ""}]);
+  }
+
+  const deleteTextField =(id) => {
+    setFormDatas(formDatas.filter((data) => data.id !== id));
+  }
 
   const handleGenerate = async () => {
-    if (!currentImageID) {
-      alert("Please select an image.");
-      return;
-    }
-    if (!formData.text0 || !formData.text1) {
-      alert("Please fill in both text fields.");
-      return;
-    }
+    // if (!selectedImageID) {
+    //   alert("Please select an image.");
+    //   return;
+    // }
 
     try {
       setGenerating(true);
@@ -58,11 +65,11 @@ const Home = () => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          template_id: currentImageID,
+          template_id: selectedImage.id,
           username: process.env.NEXT_PUBLIC_IMGFLIP_USERNAME,
           password: process.env.NEXT_PUBLIC_IMGFLIP_PASSWORD,
-          text0: formData.text0,
-          text1: formData.text1,
+          text0: formDatas[0].text,
+          text1: formDatas[1].text,
         }),
       });
 
@@ -70,7 +77,7 @@ const Home = () => {
       if (data?.success) {
         setGeneratedMeme(data.data.url);
         console.log(data.data.url);
-        setCurrentImage(data.data.url);
+        setselectedImage(data.data.url);
       } else {
         console.error(data.error_message);
         alert("Error generating meme: " + data.error_message);
@@ -87,7 +94,7 @@ const Home = () => {
     const link = document.createElement("a");
     link.style.display = "none";
     link.href = generatedMeme;
-    link.download = "generated_meme.jpg"; // TODO name based on the generated meme
+    link.download = "meme.jpg"; // TODO name based on the generated meme
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -110,43 +117,49 @@ const Home = () => {
 
       <div className="flex mx-4 gap-4">
         <div className="editor">
-          {currentImage ? (
+          {selectedImage.url ? (
             <img
-              src={currentImage}
+              src={selectedImage.url}
               width={200}
               height={200}
               className="w-full rounded-md"
-              alt="Selected Image"
+              alt={"Selected Image: "+ selectedImage.name}
             />
           ) : (
             <h3 className="text-center font-bold">[Select an Image]</h3>
           )}
+          <div className="flex justify-end mr-8 mt-4 mb-0">
+            <button className="flex justify-end items-center bg-green-500 py-1 px-3 w-fit rounded-md" onClick={addTextField}>
+              add text&nbsp;<LuPlus />
+            </button>
+          </div>
           <form>
-            <label>Text 0:</label>
-            <input
-              className="text-form"
-              name="text0"
-              onChange={handleChange}
-              required={true}
-              value={formData.text0}
-            />
-            <br />
-            <label>Text 1:</label>
-            <input
-              className="text-form"
-              name="text1"
-              onChange={handleChange}
-              required={true}
-              value={formData.text1}
-            />
+            {formDatas.map((data, id) => (
+              <div key={data.id}>
+                <label>Text:</label>
+                <TextInput
+                  data={data}
+                  handleChange={(e) => handleChange(e, data.id)}
+                />
+                { data.id !== 1 && 
+                  <button onClick={() => deleteTextField(data.id)}>
+                   <LuDelete/>
+                  </button>}
+              </div>
+            ))}
           </form>
+
+
           <div className="flex gap-4 self-center h-10">
+
             <button className="generate-btn" onClick={handleGenerate}>
               {generating ? "Generating..." : "Generate"}
             </button>
+
             <button className="download-btn" onClick={handleDownload}>
               <LuDownload />
             </button>
+
           </div>
         </div>
         <div className="w-[62rem] max-w-[70%] flex p-2 gap-2 flex-wrap">
@@ -156,8 +169,8 @@ const Home = () => {
                 <img
                   src={data.url}
                   className="w-48 h-48"
-                  onClick={handleImageChange}
-                  alt={data.id}
+                  onClick={(e) => handleImageChange(e, data)}
+                  alt={data.name}
                 />
               </div>
             ))
