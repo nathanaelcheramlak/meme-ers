@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .editor {
-    @apply w-96 max-w-[30%] max-h-fit flex flex-col justify-center gap-4 bg-[lightblue] px-4 py-8 rounded-lg border-2 border-solid border-[black];
+    @apply lg:w-96 lg:max-w-[30%] max-h-fit flex flex-col justify-center gap-4 bg-[lightblue] px-4 py-8 rounded-lg border-2 border-solid border-[black];
 }
 
 .text-form {
