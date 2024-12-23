@@ -100,6 +100,7 @@ const Home = () => {
   };
 
   return (
+    <>
     <div>
       <nav>
         <ul className="flex p-5 items-center">
@@ -107,16 +108,16 @@ const Home = () => {
             src="/OOH_face.jpg"
             height={100}
             width={100}
-            className="w-20 rounded-md"
+            className="lg:w-20 w-16 rounded-md"
             alt="Logo"
           />
-          <li className="font-extrabold text-white bg-orange-500 text-4xl p-2 rounded-md ml-2">
+          <li className="font-extrabold text-white bg-orange-500 lg:text-4xl text-2xl p-2 rounded-md ml-2">
             Meme Generator
           </li>
         </ul>
       </nav>
 
-      <div className="flex mx-4 gap-4">
+      <div className="lg:flex mx-4 gap-4">
         <div className="editor">
           {selectedImage.url ? (
             <img
@@ -158,13 +159,13 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <div className="w-[62rem] max-w-[70%] flex p-2 gap-2 flex-wrap">
+        <div className="lg:w-[62rem] lg:max-w-[70%] flex p-2 gap-2 flex-wrap justify-center">
           {images.length > 0 ? (
             images.map((data, key) => (
               <div key={key} className="image">
                 <img
                   src={data.url}
-                  className="w-48 h-48"
+                  className="lg:w-48 lg:h-48 w-28 h-28"
                   onClick={(e) => handleImageChange(e, data)}
                   alt={data.name}
                 />
@@ -176,6 +177,10 @@ const Home = () => {
         </div>
       </div>
     </div>
+    <div className="flex justify-center ">
+      <p className="my-8 border-gray-600 border-2 rounded-md w-fit px-4">Made with fun by Nathanael</p>
+    </div>
+    </>
   );
 };
 
